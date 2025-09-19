@@ -108,7 +108,7 @@ CAPTION "Keep session alive"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Close",IDOK,247,104,52,16
-    LTEXT           "Handle of window:",IDC_STATIC,23,18,70,13
+    LTEXT           "Handle of window (hexa):",IDC_STATIC,23,18,88,13
     EDITTEXT        IDC_EDIT_HANDLE,117,16,102,15,ES_AUTOHSCROLL
     PUSHBUTTON      "Set timer",IDC_BUTTON_SET_TIMER,23,66,52,16
     LTEXT           "Window caption:",IDC_STATIC,23,40,69,14
