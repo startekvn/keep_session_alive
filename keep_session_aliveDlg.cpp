@@ -64,6 +64,7 @@ END_MESSAGE_MAP()
 
 Ckeep_session_aliveDlg::Ckeep_session_aliveDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(Ckeep_session_aliveDlg::IDD, pParent)
+	, m_bIsChildWindow(FALSE)
 {
 	//{{AFX_DATA_INIT(Ckeep_session_aliveDlg)
 	m_strCaption = _T("");
@@ -83,6 +84,8 @@ void Ckeep_session_aliveDlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 	DDX_Control(pDX, IDC_EDIT_TIME, m_ctrEditTime);
 	DDV_MaxChars(pDX, m_strTime, 4);
+	DDX_Control(pDX, IDC_CHECK_ISCHILD, m_cbIsChild);
+	DDX_Check(pDX, IDC_CHECK_ISCHILD, m_bIsChildWindow);
 }
 
 BEGIN_MESSAGE_MAP(Ckeep_session_aliveDlg, CDialog)
@@ -204,9 +207,9 @@ void Ckeep_session_aliveDlg::OnButtonSetTimer()
 	TCHAR szCaption[256];
 
 	DWORD dwTime = atoi((LPCSTR)m_strTime);
-	if (dwTime > MAX_TIME || dwTime < 10)
+	if (dwTime > MAX_TIME || dwTime < 1)
 	{
-		MessageBox(_T("Time value is between 10 and 3600. Please correct it!"), _T("Timer"), MB_OK|MB_ICONERROR);
+		MessageBox(_T("Time value is between 1 and 3600. Please correct it!"), _T("Timer"), MB_OK|MB_ICONERROR);
 		m_ctrEditTime.SetFocus();
 		return;
 	}
@@ -215,6 +218,10 @@ void Ckeep_session_aliveDlg::OnButtonSetTimer()
 
 	hWndWindow = (HWND)strtol((LPCSTR)m_strHandleWindow, NULL, 16);
 	m_strHandleWindow.Format(_T("0x%08x"), hWndWindow);
+	if (TRUE == m_bIsChildWindow)
+	{
+		hWndWindow = ::GetParent(hWndWindow);
+	}
 	::GetWindowText(hWndWindow, szCaption, 255);
 	szCaption[255] = 0;
 	m_strCaption = szCaption;
@@ -239,8 +246,6 @@ BOOL CALLBACK EnumChildProc(HWND hwnd,
 							LPARAM lParam
 							)
 {
-	//::PostMessage(hWndWindow, WM_KEYDOWN, VK_F5, 0x003F0001);  //OK
-	//::PostMessage(hWndWindow, WM_KEYUP, VK_F5, 0xC03F0001);    // OK
 	::PostMessage(hwnd,  WM_KEYDOWN, VK_F5, 0x003F0001);  //OK
 
 	::PostMessage(hwnd,  WM_KEYUP, VK_F5, 0xC03F0001);    // OK
@@ -254,6 +259,8 @@ void Ckeep_session_aliveDlg::OnTimer(UINT nIDEvent)
 #if 1
     if (nIDEvent == ID_TIMER_REFRESH_WINDOW)
     {
+		::PostMessage(hWndWindow, WM_KEYDOWN, VK_F5, 0x003F0001);  //OK
+		::PostMessage(hWndWindow, WM_KEYUP, VK_F5, 0xC03F0001);    // OK
 		EnumChildWindows(hWndWindow, EnumChildProc, 0);
     }
 #endif

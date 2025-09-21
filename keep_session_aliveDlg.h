@@ -24,6 +24,8 @@ public:
 	CString	m_strCaption;
 	CString	m_strHandleWindow;
 	CString	m_strTime;
+	CButton m_cbIsChild;
+	BOOL m_bIsChildWindow;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
